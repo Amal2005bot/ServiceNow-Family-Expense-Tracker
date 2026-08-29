@@ -4,7 +4,7 @@ A personal/family finance tracking app built as a custom scoped application on a
 
 **Scope Identifier:** `x_2169755_family_0`
 
-▶️ **Demo Video:** [Watch here](#) *(add your LinkedIn/YouTube link)*
+**Demo Video:** [Watch here](#) *(add your LinkedIn/YouTube link)*
 
 ---
 
@@ -47,18 +47,18 @@ Includes a related list showing all linked Daily Expense records.
 
 ## Features & Architecture
 
-### Client Scripts (`/Client Script`)
+### Client Scripts (`/client-scripts`)
 - **Set Default Date and User** (`onLoad`) — auto-populates `spent_by` and `expense_date` on new expense records.
 - **Validate Positive Amount** (`onChange` on `amount`) — blocks non-positive values, then calls a GlideAjax Script Include asynchronously to check the entry against the remaining budget in real time and warn the user before they even save.
 
-### Script Include (`/Script Include`)
-- **`ExpenseBudgetAjax`** — client-callable, extends `AbstractAjaxProcessor`. Returns the live remaining budget for a given Monthly Budget record so the client script can validate without a full page submit.
+### Script Include (`/script-includes`)
+- **`ExpenseBudgetAjax`** — client-callable, extends `AbstractAjaxProcessor`. Returns the live `remaining_budget` value for a given Monthly Budget record via `getRemainingBudget()`, so the client script can validate a new expense against the real-time remaining balance without a full page submit. Relies on the Business Rules above keeping `remaining_budget` accurate on every save.
 
-### Business Rules (`/Business Rules`)
-- **`Calculate Monthly Total`** (After: Insert/Update/Delete) — recalculates `total_spent` and `remaining_budget` on the parent budget whenever a child expense changes, and auto-evaluates status thresholds (Exceeded / Warning at ≤15% remaining / Within Budget). Handles reassignment between budgets and resets correctly when all expenses are deleted.
-- **`<TODO: second Business Rule name>`** — *<TODO: describe what this rule does>*
+### Business Rules (`/business-rules`)
+- **`Calculate Monthly Total`** — Table: Daily Expense · When: After (Insert/Update/Delete). Recalculates `total_spent` and `remaining_budget` on the parent Monthly Budget whenever a child expense changes, and auto-evaluates status thresholds (Exceeded / Warning at ≤15% remaining / Within Budget). Handles reassignment between budgets and resets correctly when all expenses are deleted.
+- **`Recalculate on Budget Change`** — Table: Monthly Budget · When: Before (Insert/Update) · Condition: `allocated_budget` changes. Recalculates `remaining_budget` and `status` directly on the Monthly Budget record when the allocated amount itself is edited — this covers the case where an admin increases or decreases the monthly cap after expenses already exist, which the first Business Rule alone wouldn't catch since it only reacts to changes on child Daily Expense records.
 
-### Flow Designer (`/Flow Designer`)
+### Flow Designer (`/flow-designer`)
 - **`Budget Exceeded Alert`** — triggers only when a budget's Status transitions into "Exceeded" (not on every subsequent save, to avoid duplicate emails). Looks up every Daily Expense record tied to the budget and emails each spender using native Look Up Records + For Each + Send Email actions — built declaratively, no scripting required.
 
 ### UI Policy
@@ -83,5 +83,6 @@ Documenting these because debugging methodology matters as much as the build its
 `ServiceNow Scoped App Development` · `GlideRecord` · `GlideAggregate` · `GlideAjax` · `Business Rules` · `Client Scripts` · `Script Includes` · `Flow Designer` · `UI Policies` · `ACL fundamentals`
 
 ---
-## Author
+
+## Author 
 Amal Krishna J
