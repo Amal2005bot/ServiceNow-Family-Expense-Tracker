@@ -4,7 +4,7 @@ A personal/family finance tracking app built as a custom scoped application on a
 
 **Scope Identifier:** `x_2169755_family_0`
 
-**Demo Video:** [Watch here](#) *(add your LinkedIn/YouTube link)*
+**Demo Video:** [Watch here](https://lnkd.in/p/gzPrGcar) 
 
 ---
 
